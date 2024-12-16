@@ -1,3 +1,7 @@
+/* eslint-disable comma-dangle */
+/* eslint-disable no-undef */
+/* eslint-disable no-useless-concat */
+/* eslint-disable no-underscore-dangle */
 /* ************************************************************************************************
  *                                                                                                *
  * Please read the following tutorial before implementing tasks:                                   *
@@ -19,9 +23,16 @@
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
 }
+
+Rectangle.prototype = {
+  getArea() {
+    return this.width * this.height;
+  },
+};
 
 /**
  * Returns the JSON representation of specified object
@@ -33,8 +44,8 @@ function Rectangle(/* width, height */) {
  *    [1,2,3]   =>  '[1,2,3]'
  *    { width: 10, height : 20 } => '{"height":10,"width":20}'
  */
-function getJSON(/* obj */) {
-  throw new Error('Not implemented');
+function getJSON(obj) {
+  return JSON.stringify(obj);
 }
 
 /**
@@ -48,8 +59,8 @@ function getJSON(/* obj */) {
  *    const r = fromJSON(Circle.prototype, '{"radius":10}');
  *
  */
-function fromJSON(/* proto, json */) {
-  throw new Error('Not implemented');
+function fromJSON(proto, json) {
+  return Object.setPrototypeOf(JSON.parse(json), proto);
 }
 
 /**
@@ -107,33 +118,40 @@ function fromJSON(/* proto, json */) {
  */
 
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  element(value) {
+    return this._createSelector('element', value);
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    return this._createSelector('id', `#${value}`);
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    return this._createSelector('class', `.${value}`);
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    return this._createSelector('attr', `[${value}]`);
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    return this._createSelector('pseudoClass', `:${value}`);
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    return this._createSelector('pseudoElement', `::${value}`);
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    const combineSelector = `${selector1.stringify()} ${combinator} ${selector2.stringify()}`;
+    return new CssSelector().setValue(combineSelector);
   },
+
+  _createSelector(type, value) {
+    const selector = new CssSelector();
+    selector[type](value);
+    return selector;
+  }
 };
 
 module.exports = {
